@@ -83,7 +83,6 @@ public class CreamAsset: Object {
     /// - Returns: A CreamAsset if it was successful
     public static func create(objectID: String, propName: String, data: Data, url: URL, shouldOverwrite: Bool = true) -> CreamAsset? {
         let creamAsset = CreamAsset(objectID: objectID, propName: propName)
-        creamAsset.filePath = url
         do {
             try save(data: data, to: creamAsset.uniqueFileName, shouldOverwrite: shouldOverwrite)
             return creamAsset
