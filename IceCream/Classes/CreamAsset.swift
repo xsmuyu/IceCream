@@ -105,6 +105,7 @@ public class CreamAsset: Object {
         return create(objectID: object.recordID.recordName,
                       propName: propName,
                       data: data,
+                      url: URL,
                       shouldOverwrite: shouldOverwrite)
     }
 
