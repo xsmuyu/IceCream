@@ -23,9 +23,10 @@ public class CreamAsset: Object {
         return ["filePath"]
     }
 
-    private convenience init(objectID: String, propName: String) {
+    private convenience init(objectID: String, 
+                             propName: String) {
         self.init()
-        self.uniqueFileName = "\(objectID)_\(propName)"
+        self.uniqueFileName = objectID
     }
     
     /// Use this method to fetch the underlying data of the CreamAsset
@@ -34,7 +35,9 @@ public class CreamAsset: Object {
     }
 
     /// Where the asset locates in the file system
-    lazy public var filePath = CreamAsset.creamAssetDefaultURL().appendingPathComponent(uniqueFileName)
+    public var filePath: URL {
+        return CreamAsset.creamAssetDefaultURL().appendingPathComponent(uniqueFileName)
+    }
 
     /// Save the given data to local file system
     /// - Parameters:
@@ -81,7 +84,7 @@ public class CreamAsset: Object {
     ///   - data: The file data
     ///   - shouldOverwrite: Whether to try and save the file even if an existing file exists for the same object ID.
     /// - Returns: A CreamAsset if it was successful
-    public static func create(objectID: String, propName: String, data: Data, url: URL, shouldOverwrite: Bool = true) -> CreamAsset? {
+    public static func create(objectID: String, propName: String, data: Data, shouldOverwrite: Bool = true) -> CreamAsset? {
         let creamAsset = CreamAsset(objectID: objectID, propName: propName)
         do {
             try save(data: data, to: creamAsset.uniqueFileName, shouldOverwrite: shouldOverwrite)
@@ -100,11 +103,10 @@ public class CreamAsset: Object {
     ///   - data: The file data
     ///   - shouldOverwrite: Whether to try and save the file even if an existing file exists for the same object.
     /// - Returns: A CreamAsset if it was successful
-    public static func create(object: CKRecordConvertible, propName: String, data: Data, url: URL, shouldOverwrite: Bool = true) -> CreamAsset? {
+    public static func create(object: CKRecordConvertible, propName: String, data: Data, shouldOverwrite: Bool = true) -> CreamAsset? {
         return create(objectID: object.recordID.recordName,
                       propName: propName,
                       data: data,
-                      url: url,
                       shouldOverwrite: shouldOverwrite)
     }
 
@@ -133,7 +135,6 @@ public class CreamAsset: Object {
     /// - Returns: The CreamAsset if creates successful
     public static func create(objectID: String, propName: String, url: URL, shouldOverwrite: Bool = true) -> CreamAsset? {
         let creamAsset = CreamAsset(objectID: objectID, propName: propName)
-        creamAsset.filePath = url
         if shouldOverwrite {
             do {
                 try FileManager.default.removeItem(at: creamAsset.filePath)
@@ -178,7 +179,7 @@ extension CreamAsset {
         }
         return [String]()
     }
-
+ 
     /// Execute deletions
     private static func excecuteDeletions(in filesNames: [String]) {
         for fileName in filesNames {
