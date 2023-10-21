@@ -34,9 +34,7 @@ public class CreamAsset: Object {
     }
 
     /// Where the asset locates in the file system
-    public var filePath: URL {
-        return CreamAsset.creamAssetDefaultURL().appendingPathComponent(uniqueFileName)
-    }
+    lazy public var filePath = CreamAsset.creamAssetDefaultURL().appendingPathComponent(uniqueFileName)
 
     /// Save the given data to local file system
     /// - Parameters:
@@ -83,9 +81,9 @@ public class CreamAsset: Object {
     ///   - data: The file data
     ///   - shouldOverwrite: Whether to try and save the file even if an existing file exists for the same object ID.
     /// - Returns: A CreamAsset if it was successful
-    public static func create(objectID: String, propName: String, data: Data, shouldOverwrite: Bool = true) -> CreamAsset? {
-        let creamAsset = CreamAsset(objectID: objectID,
-                                    propName: propName)
+    public static func create(objectID: String, propName: String, data: Data, url: URL, shouldOverwrite: Bool = true) -> CreamAsset? {
+        let creamAsset = CreamAsset(objectID: objectID, propName: propName)
+        creamAsset.filePath = url
         do {
             try save(data: data, to: creamAsset.uniqueFileName, shouldOverwrite: shouldOverwrite)
             return creamAsset
