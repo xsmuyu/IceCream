@@ -134,6 +134,7 @@ public class CreamAsset: Object {
     /// - Returns: The CreamAsset if creates successful
     public static func create(objectID: String, propName: String, url: URL, shouldOverwrite: Bool = true) -> CreamAsset? {
         let creamAsset = CreamAsset(objectID: objectID, propName: propName)
+        creamAsset.filePath = url
         if shouldOverwrite {
             do {
                 try FileManager.default.removeItem(at: creamAsset.filePath)
